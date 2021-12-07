@@ -1,23 +1,23 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware } from 'redux';
 
-import thunk from "redux-thunk";
+import thunk from 'redux-thunk';
 
 const initialState = {
   greetings: [
     {
       id: 1,
-      name: "Hello"
+      name: 'Hello',
     },
     {
       id: 2,
-      name: "World"
-    }
-  ]
-}
+      name: 'World',
+    },
+  ],
+};
 
 function rootReducer(state = initialState, action) {
   switch (action.type) {
-    case "GET_GREETINGS_SUCCESS":
+    case 'GET_GREETINGS_SUCCESS':
       return { greetings: action.json };
     default:
       return state;

@@ -1,52 +1,57 @@
-import React from "react"
-import { connect } from "react-redux"
+import React from 'react';
+import { connect } from 'react-redux';
 
-import { createStructuredSelector } from "reselect"
+import PropTypes from 'prop-types';
 
-const GET_GREETINGS_REQUEST = "GET_GREETINGS_REQUEST"
-const GET_GREETINGS_SUCCESS = "GET_GREETINGS_SUCCESS"
+import { createStructuredSelector } from 'reselect';
 
-const getGreeting = () => {
-  return dispath => {
-    dispath({ type: GET_GREETINGS_REQUEST })
-    return fetch("http://localhost:3000/v1/greeting.json")
-      .then(res => res.json())
-      .then(json => dispath(getGreetingsSuccess(json)))
-      .catch(err => console.log(err))
-  }
-}
+const GET_GREETINGS_REQUEST = 'GET_GREETINGS_REQUEST';
+const GET_GREETINGS_SUCCESS = 'GET_GREETINGS_SUCCESS';
 
-const getGreetingsSuccess = json => {
-  return {
-    type: GET_GREETINGS_SUCCESS,
-    json
-  }
-}
+const getGreetingsSuccess = (json) => ({
+  type: GET_GREETINGS_SUCCESS,
+  json,
+});
 
-class Greeting extends React.Component {
-  render () {
+const getGreeting = () => (dispath) => {
+  dispath({ type: GET_GREETINGS_REQUEST });
+  return fetch('http://localhost:3000/v1/greeting.json')
+    .then((res) => res.json())
+    .then((json) => dispath(getGreetingsSuccess(json)))
+    .catch((err) => console.log(err));
+};
 
-    let { greeting } = this.props
-    console.log(greeting, this.props)
-    const ramdomNumber = Math.floor(Math.random() * 5)
-    greeting = greeting[ramdomNumber]
+const Greeting = (props) => {
+  let { greeting } = props;
+  const { getGreeting } = props;
+  const ramdomNumber = Math.floor(Math.random() * 5);
+  greeting = greeting[ramdomNumber];
+  const { name } = greeting;
 
+  return (
+    <>
+      Greeting:
+      {' '}
+      {greeting?.name ? name : 'No greeting'}
 
-    return (
-      <React.Fragment>
-        Greeting: {greeting?.name ? greeting.name: "No greeting"} 
-
-        <br />
-        <button onClick={this.props.getGreeting}>Get Greeting</button>
-      </React.Fragment>
-    );
-  }
-}
+      <br />
+      <button type="button" onClick={getGreeting}>Get Greeting</button>
+    </>
+  );
+};
 
 const structuredSelector = createStructuredSelector({
-  greeting: state => state.greetings
-})
+  greeting: (state) => state.greetings,
+});
 
-const mapDispatchToProps = {  getGreeting }
+Greeting.propTypes = {
+  greeting: PropTypes.shape({
+    name: PropTypes.string,
+    id: PropTypes.number,
+  }).isRequired,
+  getGreeting: PropTypes.func.isRequired,
+};
 
-export default connect(structuredSelector, mapDispatchToProps)(Greeting)
+const mapDispatchToProps = { getGreeting };
+
+export default connect(structuredSelector, mapDispatchToProps)(Greeting);
