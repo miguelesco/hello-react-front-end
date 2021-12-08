@@ -7,7 +7,9 @@ This a React project is for test the Greeting API in rails and display multiple 
 
 - ![React](https://img.shields.io/badge/React-00D8FF?style=for-the-badge&logo=react&logoColor=61DAFB)
 
-## Getting Started
+## Backend Repo
+
+- https://github.com/miguelesco/hello-rails-back-end
 
 ### Installation
 
